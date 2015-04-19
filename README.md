@@ -40,14 +40,64 @@ $ npm install -g grunt-cli
 
 /example-app 
 	package.json
-    {
-		"name": "example-app",
-		"version": "0.1.0",
-		"devDependencies": {
-    		"grunt": "~0.4.0",
-    		"grunt-contrib-watch": "~0.4.0"
-    	}
-    }	
-  		
+        {
+            "name": "example-app",
+            "version": "0.1.0",
+            "devDependencies": {
+                "grunt": "~0.4.0",
+                "grunt-contrib-watch": "~0.4.0"
+            }
+        }
+
 $ npm install
+
+     Gruntfile.js
+            module.exports = function(grunt) {
+                grunt.loadNpmTasks('grunt-contrib-watch');
+                var taskConfig = {
+                    pkg: grunt.file.readJSON('package.json'),
+                    watch: {
+                        jssrc: {
+                            files: [
+                                'src/**/*.js'
+                            ],
+                            tasks: [
+
+                            ]
+                        }
+                    }
+                };
+                grunt.initConfig(taskConfig);
+                grunt.registerTask('default', []);
+            };
+
+$ grunt
+Done without errors.
+```
+
+##Bower for Vendor Libraries
+```sh
+$ npm install -g bower
+
+$ bower init
+
+creates bower.json:
+    {
+        name: 'example-app',
+        version: '0.0.1',
+        authors: [
+            'Joel Hooks <joelhooks@gmail.com>'
+        ],
+        description: 'This is an example.',
+        license: 'MIT',
+        private: true,
+        ignore: [
+            '**/.*',
+            'node_modules',
+            'bower_components',
+            'test',
+            'tests'
+        ]
+    }
+
 ```

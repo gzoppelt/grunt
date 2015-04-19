@@ -1,0 +1,16 @@
+{
+  "name": "example-app",
+  "version": "0.1.0",
+  "description": "Joel Hooks' grunt book",
+  "authors": [
+    "Guenther <guenther@z-bit.co.uk>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
