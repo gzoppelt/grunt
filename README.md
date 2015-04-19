@@ -33,22 +33,25 @@
 - start local development server that will serve the file while working
 - convert all html partial templates to Javascript objects
  
-'''sh
+```sh
 $ npm install -g grunt-cli
-'''
+```
+
 /example-app
 	package.json
-  '''sh
+  		```sh
 		{
 			"name": "example-app",
 			"version": "0.1.0",
 			"devDependencies": {
-        "grunt": "~0.4.0",
-        "grunt-contrib-watch": "~0.4.0"
-      }
-  '''
+        			"grunt": "~0.4.0",
+        			"grunt-contrib-watch": "~0.4.0"
+      			}
+      		}	
+  		```
 
-'''sh
+```sh
 $ npm install
-'''
+```
+
     }
