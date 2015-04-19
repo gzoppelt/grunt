@@ -35,23 +35,17 @@
  
 ```sh
 $ npm install -g grunt-cli
-```
 
-/example-app
+/example-app 
 	package.json
-  		```sh
-		{
-			"name": "example-app",
-			"version": "0.1.0",
-			"devDependencies": {
-        			"grunt": "~0.4.0",
-        			"grunt-contrib-watch": "~0.4.0"
-      			}
-      		}	
-  		```
-
-```sh
+    {
+		"name": "example-app",
+		"version": "0.1.0",
+		"devDependencies": {
+    		"grunt": "~0.4.0",
+    		"grunt-contrib-watch": "~0.4.0"
+    	}
+    }	
+  		
 $ npm install
 ```
-
-    }
