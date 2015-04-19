@@ -1,5 +1,6 @@
 # grunt
 ##Essential AngularJS
+```sh
 /src
 	/app
 		app.js
@@ -12,19 +13,20 @@
 				angular.module('example-app.login', [
 				])
 
-				routings	|
-				controller(s)	|
-				services	|
-				directives	| that are specific for this module
+                routings	    |
+                controller(s)   |
+                services        |
+				directives      |  that are specific for this module
 
-			login.spec.js						loginSpec.js		??
+			login.spec.js						                    loginSpec.js		??
 				describe(“example-app.login”, function () {
-				
+				    //code goes here
 				});
 
-			login.tpl.html						loginTemplate.html	??
+			login.tpl.html						                    loginTemplate.html	??
 
 	index.html
+```
 
 ## Barebone GruntJS
 - watch source code and automatically build when it changes
