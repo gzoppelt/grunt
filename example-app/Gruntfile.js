@@ -1,13 +1,15 @@
 module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
+    var userConfig = require('./build.config.js');
+
     var taskConfig = {
         pkg: grunt.file.readJSON('package.json'),
 
         watch: {
             jssrc: {
                 files: [
-                    'src/**/*.js'
+                    '<%= app_files %>'
                 ],
                 tasks: [
 
@@ -16,7 +18,7 @@ module.exports = function (grunt) {
         }
     };
 
-    grunt.initConfig(taskConfig);
+    grunt.initConfig(grunt.util._.extend(taskConfig, userConfig);
 
     grunt.registerTask('default', []);
 

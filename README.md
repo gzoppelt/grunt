@@ -1,31 +1,38 @@
 # grunt
 ##Essential AngularJS
 ```sh
-/src
-	/app
-		app.js
-			angular.module('example-app', [
-				'example-app.login'
-			])
+/example-app
+    /build
+    /node_modules
+    /src
+        /app
+            app.js
+                angular.module('example-app', [
+                    'example-app.login'
+                ])
 
-		/login
-			login.js
-				angular.module('example-app.login', [
-				])
+            /login
+                login.js
+                    angular.module('example-app.login', [
+                    ])
 
-                routings	    |
-                controller(s)   |
-                services        |
-				directives      |  that are specific for this module
+                    routings	    |
+                    controller(s)   |
+                    services        |
+                    directives      |  that are specific for this module
 
-			login.spec.js						                    loginSpec.js		??
-				describe(“example-app.login”, function () {
-				    //code goes here
-				});
+                login.spec.js						                    loginSpec.js		??
+                    describe(“example-app.login”, function () {
+                        //code goes here
+                    });
 
-			login.tpl.html						                    loginTemplate.html	??
+                login.tpl.html						                    loginTemplate.html	??
 
-	index.html
+        index.html
+
+    /vendor           if (.bowerrc: {"directory": "vendor"}) {/vendor} else {/bower_components}
+
+
 ```
 
 ## Barebone GruntJS
@@ -100,4 +107,46 @@ creates bower.json:
         ]
     }
 
+/example-app
+    .bowerrc
+        {
+            "directory": "vendor"
+        }
+
+$bower install angular --save
+
+    build.config.js
+        module.exports = {
+            build_dir: 'build',
+
+            app_files: {
+                js:     ['src/**/*.js', '!src/**/*.spec.js],    //source w/o specs
+                atpl:   ['src/app/**/*.tpl.html'],
+                html:   ['src/index.html'],
+            },
+
+            vendor_files: {
+                js: [
+                    'vendor/angular/angular.js'
+                ]
+            }
+        };
+
+    Gruntfile.js
+        module.exports = function(grunt) {
+            grunt.loadNpmTasks('grunt-contrib-watch');
+
+**          var userConfig = require('./build.config.js');
+            var taskConfig = {
+                pkg: grunt.file.readJSON('package.json'),
+                watch: {
+                    jssrc: {
+**                      files: ['<%= app_files %>'],
+                        tasks: []
+                    }
+                }
+            };
+**          grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
+            grunt.registerTask('default', []);
+        };
 ```
