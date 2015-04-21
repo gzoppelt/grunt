@@ -12,7 +12,7 @@ module.exports = {
 
     vendor_files: {
         js: [
-            'vendor/angular/angular.js'
+            'vendor/angular/angular.min.js'
         ]
     }
 };

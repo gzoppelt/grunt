@@ -115,40 +115,41 @@ creates bower.json:
 
 $bower install angular --save
 ```
-    build.config.js
+    **build.config.js**
 ```js
-        module.exports = {
-            build_dir: 'build',
+    module.exports = {
+        build_dir: 'build',
 
-            app_files: {
-                js:     ['src/**/*.js', '!src/**/*.spec.js],    //source w/o specs
-                atpl:   ['src/app/**/*.tpl.html'],
-                html:   ['src/index.html'],
-            },
+        app_files: {
+            js:     ['src/**/*.js', '!src/**/*.spec.js'],    //source w/o specs
+            atpl:   ['src/app/**/*.tpl.html'],
+            html:   ['src/index.html'],
+        },
 
-            vendor_files: {
-                js: [
-                    'vendor/angular/angular.js'
-                ]
+        vendor_files: {
+            js: [
+                'vendor/angular/angular.js'
+            ]
+        }
+    };
+```
+    **Gruntfile.js**
+```js
+    module.exports = function(grunt) {
+        grunt.loadNpmTasks('grunt-contrib-watch');
+
+        var userConfig = require('./build.config.js');                  // userConfig
+        var taskConfig = {
+            pkg: grunt.file.readJSON('package.json'),
+            watch: {
+                jssrc: {
+                    files: ['<%= app_files.js %>'],                        // app_files
+                    tasks: []
+                }
             }
         };
-```
-    Gruntfile.js
-```js
-        module.exports = function(grunt) {
-            grunt.loadNpmTasks('grunt-contrib-watch');
+        grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));  // userConfig
+        grunt.registerTask('default', []);
 
-            var userConfig = require('./build.config.js');                  // userConfig
-            var taskConfig = {
-                pkg: grunt.file.readJSON('package.json'),
-                watch: {
-                    jssrc: {
-                        files: ['<%= app_files %>'],                        // app_files
-                        tasks: []
-                    }
-                }
-            };
-            grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));  // userConfig
-            grunt.registerTask('default', []);
-        };
+    };
 ```
