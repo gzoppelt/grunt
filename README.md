@@ -30,7 +30,7 @@
 
         index.html
 
-    /vendor           if (.bowerrc: {"directory": "vendor"}) {/vendor} else {/bower_components}
+    /vendor          if (.bowerrc: {"directory": "vendor"}) {/vendor} else {/bower_components}
 
 
 ```
@@ -114,8 +114,9 @@ creates bower.json:
         }
 
 $bower install angular --save
-
+```
     build.config.js
+```js
         module.exports = {
             build_dir: 'build',
 
@@ -131,22 +132,23 @@ $bower install angular --save
                 ]
             }
         };
-
+```
     Gruntfile.js
+```js
         module.exports = function(grunt) {
             grunt.loadNpmTasks('grunt-contrib-watch');
 
-**          var userConfig = require('./build.config.js');
+            var userConfig = require('./build.config.js');                  // userConfig
             var taskConfig = {
                 pkg: grunt.file.readJSON('package.json'),
                 watch: {
                     jssrc: {
-**                      files: ['<%= app_files %>'],
+                        files: ['<%= app_files %>'],                        // app_files
                         tasks: []
                     }
                 }
             };
-**          grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
+            grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));  // userConfig
             grunt.registerTask('default', []);
         };
 ```
