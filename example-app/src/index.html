@@ -8,5 +8,8 @@
 
 <body>
 
+<% scripts.forEach(function (file) { %>
+<script src="<%= file %>"></script>
+<% }); %>
 </body>
 </html>
