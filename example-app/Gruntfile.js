@@ -2,6 +2,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-nodemon');
+    grunt.loadNpmTasks('grunt-concurrent');
 
     var userConfig = require('./build.config.js');
 
@@ -11,6 +13,24 @@ module.exports = function(grunt) {
         clean: [
             '<%= build_dir %>'
         ],
+
+        nodemon: {
+            dev: {
+                script: 'server/server.js',
+                options: {
+                    watch: ['server']
+                }
+            }
+        },
+
+        concurrent: {
+            dev: {
+                tasks: ['nodemon', 'watch'],
+                options: {
+                    logCurrentOutput: true
+                }
+            }
+        },
 
         copy: {
             appjs: {
@@ -68,7 +88,8 @@ module.exports = function(grunt) {
 
     grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
 
-    grunt.registerTask('default', ['clean', 'copy', 'index', 'watch']);
+    grunt.registerTask('default', ['build', 'concurrent']);
+    grunt.registerTask('build', ['clean', 'copy', 'index']);
 
     function filterForJs(files) {
         return files.filter(function (file) {
