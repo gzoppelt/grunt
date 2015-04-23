@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-html2js');
 
     var userConfig = require('./build.config.js');
 
@@ -60,7 +61,8 @@ module.exports = function(grunt) {
                 dir: '<%= build_dir %>',
                 src: [
                     '<%= vendor_files.js %>',
-                    '<%= build_dir %>/src/**/*.js'
+                    '<%= build_dir %>/src/**/*.js',
+                    '<%= html2js.app.dest %>'
                 ]
             }
         },
@@ -83,13 +85,24 @@ module.exports = function(grunt) {
                     livereload: false
                 }
             }
+        },
+
+        html2js: {
+            app: {
+                options: {
+                    base: 'src/app'
+                },
+                src: ['<%= app_files.atpl %>'],
+                dest: '<%= build_dir %>/templates-app.js'
+            }
         }
     };
 
     grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
 
     grunt.registerTask('default', ['build', 'concurrent']);
-    grunt.registerTask('build', ['clean', 'copy', 'index']);
+    grunt.registerTask('build', ['clean', 'copy', 'html2js', 'index']);
+    // !! html2js should run before index, so the script can be added to index.html
 
     function filterForJs(files) {
         return files.filter(function (file) {

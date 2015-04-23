@@ -1,3 +1,4 @@
 angular.module('example-app', [
-    'example-app.login'
+    'example-app.login',
+    'templates-app'
 ]);
