@@ -53,6 +53,16 @@ module.exports = function(grunt) {
                         expand: true
                     }
                 ]
+            },
+            templates: {
+                files: [
+                    {
+                        src: ['<%= app_files.atpl %>'],
+                        dest: '<%= build_dir %>',
+                        cwd: '.',
+                        expand: true
+                    }
+                ]
             }
         },
 
