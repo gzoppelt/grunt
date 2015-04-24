@@ -6,6 +6,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-html2js');
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-contrib-less');
 
     var userConfig = require('./build.config.js');
 
@@ -74,7 +75,8 @@ module.exports = function(grunt) {
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/src/**/*.js',
                     '<%= html2js.app.dest %>',
-                    '<%= build_dir %>/bundle.js'
+                    '<%= build_dir %>/bundle.js',
+                    '<%= build_dir %>/**/*.css'
                 ]
             }
         },
@@ -98,8 +100,12 @@ module.exports = function(grunt) {
                 }
             },
             modules: {
-                files: 'src/modules/**/*',
+                files: ['src/modules/**/*'],
                 tasks: ['browserify']
+            },
+            less: {
+                files: ['src/less/**/*.less'],
+                tasks: ['less:build']
             }
         },
 
@@ -128,27 +134,31 @@ module.exports = function(grunt) {
     grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
 
     grunt.registerTask('default', ['build', 'concurrent']);
-    grunt.registerTask('build', ['clean', 'copy', 'html2js', 'browserify', 'index']);
+    grunt.registerTask('build', ['clean', 'copy', 'html2js', 'browserify', 'less', 'index']);
     // !! html2js should run before index, so the script can be added to index.html
 
-    function filterForJs(files) {
+    function filterForExtension(extension, files) {
+        var regExt = new RegExp('\\.' + extension + '$'),
+            regDir = new RegExp('^(' + grunt.config('build_dir') + ')\/', 'g');
+
         return files.filter(function (file) {
-            return file.match(/\.js$/);
+            return file.match(regExt);
+        }).map(function (file) {
+            return file.replace(regDir, '');
         });
     }
 
     grunt.registerMultiTask('index', 'Process index.html template', function () {
-        var dirReg = new RegExp('^(' + grunt.config('build_dir') + ')\/', 'g');
-        var jsFiles = filterForJs(this.filesSrc).map(function (file) {
-            return file.replace(dirReg, '');
-        });
+        var  jsFiles = filterForExtension('js',  this.filesSrc);
+        var cssFiles = filterForExtension('css', this.filesSrc);
 
-        //grunt.log.writeln(this.filesSrc);
         grunt.file.copy('src/index.html', this.data.dir + '/index.html', {
             process: function (contents, path) {
                 return grunt.template.process(contents, {
                     data: {
-                        scripts: jsFiles
+                        scripts: jsFiles,
+                        styles: cssFiles,
+                        version: grunt.config('pkg.version')
                     }
                 });
             }

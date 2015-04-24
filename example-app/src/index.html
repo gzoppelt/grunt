@@ -3,15 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title></title>
+    <title>AngularJs Example</title>
+    <% styles.forEach(function (file) { %>
+    <link rel="stylesheet" href="<%= file %>"
+    <% }); %>
 </head>
 
 <body ng-controller="TestController">
-<h1>Test 2</h1>
-<div ui-view></div>
-<hr>
-<% scripts.forEach(function (file) { %>
-<script src="<%= file %>"></script>
-<% }); %>
-</body>
+    <h1>Test 2</h1>
+    <div ui-view></div>
+    <hr>
+    <% scripts.forEach(function (file) { %>
+    <script src="<%= file %>"></script>
+    <% }); %>
+    </body>
 </html>

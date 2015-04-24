@@ -16,7 +16,11 @@ module.exports = {
             'vendor/angular-ui-router/release/angular-ui-router.js'
         ]
     },
-    modules: {
-        all: [ 'src/modules/**/*' ]
+    less: {
+        build: {
+            files: {
+                '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': 'src/less/main.less'
+            }
+        }
     }
 };
