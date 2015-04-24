@@ -5,6 +5,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-html2js');
+    grunt.loadNpmTasks('grunt-browserify');
 
     var userConfig = require('./build.config.js');
 
@@ -72,7 +73,8 @@ module.exports = function(grunt) {
                 src: [
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/src/**/*.js',
-                    '<%= html2js.app.dest %>'
+                    '<%= html2js.app.dest %>',
+                    '<%= build_dir %>/bundle.js'
                 ]
             }
         },
@@ -94,6 +96,10 @@ module.exports = function(grunt) {
                 options: {
                     livereload: false
                 }
+            },
+            modules: {
+                files: 'src/modules/**/*',
+                tasks: ['browserify']
             }
         },
 
@@ -105,13 +111,24 @@ module.exports = function(grunt) {
                 src: ['<%= app_files.atpl %>'],
                 dest: '<%= build_dir %>/templates-app.js'
             }
+        },
+
+        browserify: {
+            build: {
+                src: ['src/modules/modules.js'],
+                dest: '<%= build_dir %>/bundle.js',
+                options: {
+                    debug: true
+                }
+            }
         }
     };
+
 
     grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
 
     grunt.registerTask('default', ['build', 'concurrent']);
-    grunt.registerTask('build', ['clean', 'copy', 'html2js', 'index']);
+    grunt.registerTask('build', ['clean', 'copy', 'html2js', 'browserify', 'index']);
     // !! html2js should run before index, so the script can be added to index.html
 
     function filterForJs(files) {

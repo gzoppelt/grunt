@@ -1,7 +1,8 @@
 angular.module('example-app', [
     'ui.router',
+    'templates-app',
     'example-app.login',
-    'templates-app'
+    'example-app.modules'
 ])
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
@@ -11,5 +12,9 @@ angular.module('example-app', [
             })
         ;
         $urlRouterProvider.otherwise('/');
+    })
+
+    .controller('TestController', function (debug) {
+        debug('Das ist wichtig!');
     })
 ;

@@ -2,7 +2,7 @@ module.exports = {
     build_dir: 'build',
     app_files: {
         // source, but NO specs
-        js: [ 'src/**/*.js', '!src/**/*.spec.js' ],
+        js: [ 'src/app/**/*.js', '!src/app/**/*.spec.js' ],
 
         // our partial templates
         atpl: [ 'src/app/**/*.tpl.html' ],
@@ -15,5 +15,8 @@ module.exports = {
             'vendor/**/angular.js',
             'vendor/angular-ui-router/release/angular-ui-router.js'
         ]
+    },
+    modules: {
+        all: [ 'src/modules/**/*' ]
     }
 };

@@ -4,5 +4,6 @@ angular.module("login/login.tpl.html", []).run(["$templateCache", function($temp
   $templateCache.put("login/login.tpl.html",
     "<div>\n" +
     "    This will be the login form.\n" +
+    "\n" +
     "</div>");
 }]);
