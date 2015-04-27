@@ -8,4 +8,6 @@ angular.module('example-app.login', [
                 templateUrl: 'login/login.tpl.html'
             })
     })
+
+    .value('test', 2)
 ;

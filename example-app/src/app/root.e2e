@@ -1,0 +1,9 @@
+describe('root-state', function root_state() {
+    it('display the message', function () {
+        browser.get('http://localhost:3444/index.html');
+
+        var text = element(by.binding('cTest.statement')).getText();
+
+        expect(text).toEqual('This is the application root.');
+    });
+});

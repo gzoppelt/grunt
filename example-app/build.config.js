@@ -1,8 +1,9 @@
 module.exports = {
     build_dir: 'build',
+    dist_dir: 'dist',
     app_files: {
         // source, but NO specs
-        js: [ 'src/app/**/*.js', '!src/app/**/*.spec.js' ],
+        js: [ 'src/app/**/*.js', '!src/app/**/*.spec.js', '!src/app/**/*.e2e.js' ],
 
         // our partial templates
         atpl: [ 'src/app/**/*.tpl.html' ],
@@ -13,14 +14,9 @@ module.exports = {
     vendor_files: {
         js: [
             'vendor/**/angular.js',
-            'vendor/angular-ui-router/release/angular-ui-router.js'
+            'vendor/angular-ui-router/release/angular-ui-router.js',
+            'vendor/angular-mocks/angular-mocks.js'
         ]
-    },
-    less: {
-        build: {
-            files: {
-                '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': 'src/less/main.less'
-            }
-        }
     }
+
 };

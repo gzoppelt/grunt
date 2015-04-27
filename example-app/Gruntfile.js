@@ -2,27 +2,49 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-html2js');
     grunt.loadNpmTasks('grunt-browserify');
-    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-ng-annotate');
+    grunt.loadNpmTasks('grunt-karma');
 
     var userConfig = require('./build.config.js');
 
     var taskConfig = {
-        pkg: grunt.file.readJSON('package.json'),
+        //variables
+        pkg:            grunt.file.readJSON('package.json'),
+        dist_target:    '<%= dist_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>',
+
+        //grunt tasks
+        browserify: {
+            build: {
+                src: ['src/modules/modules.js'],
+                dest: '<%= build_dir %>/bundle.js',
+                options: {
+                    debug: true
+                }
+            }
+        },
 
         clean: [
             '<%= build_dir %>'
         ],
 
-        nodemon: {
-            dev: {
-                script: 'server/server.js',
-                options: {
-                    watch: ['server']
-                }
+        concat: {
+            dist_js: {
+                src: [
+                    '<%= vendor_files.js %>',
+                    '<%= build_dir %>/bundle.js',
+                    'module.prefix',
+                    '<%= build_dir %>/src/**/*.js',
+                    '<%= build_dir %>/templates-app.js',
+                    'module.suffix'
+                ],
+                dest: '<%= dist_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.js'
             }
         },
 
@@ -68,6 +90,16 @@ module.exports = function(grunt) {
             }
         },
 
+        html2js: {
+            app: {
+                options: {
+                    base: 'src/app'
+                },
+                src: ['<%= app_files.atpl %>'],
+                dest: '<%= build_dir %>/templates-app.js'
+            }
+        },
+
         index: {
             build: {
                 dir: '<%= build_dir %>',
@@ -78,6 +110,63 @@ module.exports = function(grunt) {
                     '<%= build_dir %>/bundle.js',
                     '<%= build_dir %>/**/*.css'
                 ]
+            },
+            dist: {
+                dir: '<%= dist_dir %>',
+                src: [
+                    '<%= dist_dir %>/**/*.js',
+                    '<%= dist_dir %>/**/*.css'
+                ]
+            }
+        },
+
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js'
+            }
+        },
+
+        less: {
+            build: {
+                files: {
+                    '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css' : 'src/less/main.less'
+                }
+            },
+            dist: {
+                options: {
+                    compress: true
+                },
+                files: {
+                    '<%= dist_target %>.css': 'src/less/main.less'
+                }
+            }
+        },
+
+        ngAnnotate: {
+            compile: {
+                files: [
+                    {
+                        src:  '<%= dist_target %>.js',
+                        dest: '<%= dist_target %>.js'
+                    }
+                ]
+            }
+        },
+
+        nodemon: {
+            dev: {
+                script: 'server/server.js',
+                options: {
+                    watch: ['server']
+                }
+            }
+        },
+
+        uglify: {
+            dist: {
+                files: {
+                    '<%= dist_target %>.js' : '<%= dist_target %>.js'
+                }
             }
         },
 
@@ -86,7 +175,7 @@ module.exports = function(grunt) {
                 files: [
                     '<%= app_files.js %>'
                 ],
-                tasks: ['copy', 'index']
+                tasks: ['karma:unit', 'copy', 'index']
             },
             html: {
                 files: ['<%= app_files.html %>'],
@@ -107,39 +196,36 @@ module.exports = function(grunt) {
                 files: ['src/less/**/*.less'],
                 tasks: ['less:build']
             }
-        },
-
-        html2js: {
-            app: {
-                options: {
-                    base: 'src/app'
-                },
-                src: ['<%= app_files.atpl %>'],
-                dest: '<%= build_dir %>/templates-app.js'
-            }
-        },
-
-        browserify: {
-            build: {
-                src: ['src/modules/modules.js'],
-                dest: '<%= build_dir %>/bundle.js',
-                options: {
-                    debug: true
-                }
-            }
         }
+
     };
 
 
     grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
 
     grunt.registerTask('default', ['build', 'concurrent']);
-    grunt.registerTask('build', ['clean', 'copy', 'html2js', 'browserify', 'less', 'index']);
-    // !! html2js should run before index, so the script can be added to index.html
+    grunt.registerTask('build', [
+        'clean',
+        'copy',
+        'karma',
+        'html2js',      // !! html2js should run before index, so the script can be added to index.html
+        'browserify',
+        'less:build',
+        'index:build'
+    ]);
+    grunt.registerTask('dist', [
+        'build',
+        'concat',
+        'ngAnnotate',
+        'uglify',
+        'less:dist',
+        'index:dist'
+    ]);
+
 
     function filterForExtension(extension, files) {
         var regExt = new RegExp('\\.' + extension + '$'),
-            regDir = new RegExp('^(' + grunt.config('build_dir') + ')\/', 'g');
+            regDir = new RegExp('^(' + grunt.config('build_dir') + '|' + grunt.config('dist_dir') + ')\/', 'g');
 
         return files.filter(function (file) {
             return file.match(regExt);

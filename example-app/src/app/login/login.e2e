@@ -1,0 +1,9 @@
+describe('login_e2e', function login_e2e() {
+    it('display the message', function () {
+        browser.get('http://localhost:3444/#/login');
+
+        var text = element(by.id('login')).getText();
+
+        expect(text).toEqual('This will be the login form.');
+    });
+});

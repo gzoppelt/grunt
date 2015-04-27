@@ -8,13 +8,17 @@ angular.module('example-app', [
         $stateProvider
             .state('root', {
                 url: '/',
-                template: '<div>This is the application root.</div>'
+                template: '<div>{{ cTest.statement }}</div>',
+                controller: 'TestController as cTest'
             })
         ;
         $urlRouterProvider.otherwise('/');
     })
 
     .controller('TestController', function (debug) {
-        debug('Das ist wichtig!');
+        var cTest = this;
+        //debug('Das ist wichtig!');
+        cTest.statement = 'This is the application root.';
+        cTest.loginMessage='This will be the login form.';
     })
 ;
